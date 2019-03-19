@@ -3,6 +3,7 @@ package me.guozi.calcite.example.redis;
 import org.apache.calcite.jdbc.CalciteConnection;
 
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -54,24 +55,36 @@ public class Main {
              * 调用scan函数读取数据库，在执行query的过程中，会调用Calcite的MemoryTable概念的scan来获取表的迭代器，这个迭代器是我们自己定义的
              * 用于对表数据进行迭代处理。这个处理过程就是实现从原始数据源的数据到我们所需要的数据之间的转换过程，要调用迭代器的功能来完成实现。
              */
-            result = st.executeQuery("select S.\"name\", SUM(S.\"age\") from \"Student\" as S group by S.\"name\"");
-            while (result.next()) {
-                System.out.println(result.getString(1) + "\t" + result.getString(2));
-            }
-            result.close();
+//            result = st.executeQuery("select S.\"name\", SUM(S.\"age\") from \"Student\" as S group by S.\"name\"");
+//            while (result.next()) {
+//                System.out.println(result.getString(1) + "\t" + result.getString(2));
+//            }
+//            result.close();
+//
+//            result = st.executeQuery("select S.\"name\" from \"Student\" as S where S.\"birthday\" is null");
+//            while (result.next()) {
+//                System.out.println(result.getString(1));
+//            }
+//            result.close();
+//
+//
+//            result = st.executeQuery("select S.\"birthday\" from \"Student\" as S where S.\"name\" = 'Jan'");
+//            while (result.next()) {
+//                System.out.println(result.getDate(1));
+//            }
+//            result.close();
 
-            result = st.executeQuery("select S.\"name\" from \"Student\" as S where S.\"birthday\" is null");
-            while (result.next()) {
-                System.out.println(result.getString(1));
-            }
-            result.close();
+//            result = st.executeQuery("select sum(1) as NUM from (select a.* from Student as a join Classes b on a.\"id\" = b.\"studentId\" where a.id = 5) t");
+//            while (result.next()) {
+//                System.out.println(result.getString(1));
+//            }
+//            result.close();
 
-
-            result = st.executeQuery("select S.\"birthday\" from \"Student\" as S where S.\"name\" = 'Jan'");
-            while (result.next()) {
-                System.out.println(result.getDate(1));
+            PreparedStatement statement = calciteConn.prepareStatement("select sum(case when name = 'Tim' then 1 else 0 end )*1.0 as NUM,count(*)*1.0 as NUM_C from (select b.\"studentId\",a.* from Student as a join Classes b on a.\"id\" = b.\"studentId\")");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                System.out.println(resultSet.getString(1) + "," + resultSet.getString(2));
             }
-            result.close();
 
             calciteConn.close();
         } catch (SQLException e) {
@@ -81,20 +94,20 @@ public class Main {
 
     public static String json() {
         return "inline:{\n" +
-            "  version: '1.0',\n" +
-            "  defaultSchema: 'school',\n" +
-            "  schemas: [\n" +
-            "    {      \n" +
-            "      type: 'custom',\n" +
-            "      name: 'school',\n" +
-            "      factory: 'me.guozi.calcite.example.redis.RedisSchemaFactory',\n" +
-            "      operand: {\n" +
-            "        param1: 'hello',\n" +
-            "        param2: 'world'\n" +
-            "      }\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}";
+                "  version: '1.0',\n" +
+                "  defaultSchema: 'school',\n" +
+                "  schemas: [\n" +
+                "    {      \n" +
+                "      type: 'custom',\n" +
+                "      name: 'school',\n" +
+                "      factory: 'me.guozi.calcite.example.redis.RedisSchemaFactory',\n" +
+                "      operand: {\n" +
+                "        param1: 'hello',\n" +
+                "        param2: 'world'\n" +
+                "      }\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}";
     }
 
 

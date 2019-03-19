@@ -44,20 +44,34 @@ public class DataBridge {
         student.columns.add(name);
         student.columns.add(birthday);
         student.columns.add(age);
-
         tables.add(student);
+
+        RedisData.Table classes = new RedisData.Table();
+        classes.tableName = "Classes";
+        RedisData.Column classesId = RedisData.createColumn("id", "long");
+        RedisData.Column classesName = RedisData.createColumn("name", "string");
+        RedisData.Column studentId = RedisData.createColumn("studentId", "long");
+        classes.columns.add(classesId);
+        classes.columns.add(classesName);
+        classes.columns.add(studentId);
+        tables.add(classes);
 
         return tables;
     }
 
     public List<List<String>> getTableData(String tableName) {
         List<List<String>> rows = new ArrayList<>();
-        if ("Student".equals(tableName)) {
-            rows.add(Arrays.asList("1", "Sam", "1990-10-11", "28"));
-            rows.add(Arrays.asList("2", "Tom", "1980-02-11", "38"));
-            rows.add(Arrays.asList("3", "Jan", "1989-11-23", "29"));
-            rows.add(Arrays.asList("3", "Tim", "", ""));
-        }
+//        if ("Student".equals(tableName)) {
+//            rows.add(Arrays.asList("1", "Sam", "1990-10-11", "28"));
+//            rows.add(Arrays.asList("2", "Tom", "1980-02-11", "38"));
+//            rows.add(Arrays.asList("3", "Jan", "1989-11-23", "29"));
+//            rows.add(Arrays.asList("4", "Tim", "", ""));
+//        }
+//        if ("Classes".equals(tableName)) {
+//            rows.add(Arrays.asList("1", "classes-A", "1"));
+//            rows.add(Arrays.asList("2", "classes-A", "2"));
+//            rows.add(Arrays.asList("3", "classes-A", "4"));
+//        }
         return rows;
     }
 }

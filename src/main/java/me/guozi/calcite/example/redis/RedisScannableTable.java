@@ -8,7 +8,6 @@ import org.apache.calcite.linq4j.Enumerator;
 import org.apache.calcite.rel.type.RelProtoDataType;
 import org.apache.calcite.schema.ScannableTable;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author chenyun
@@ -26,13 +25,13 @@ public class RedisScannableTable extends RedisTable implements ScannableTable {
 
         CalciteConnection conn = (CalciteConnection) root.getQueryProvider();
 
-        String tableName = conn.getProperties().getProperty("table_name");
+        //String tableName = conn.getProperties().getProperty("table_name");
 
         return new AbstractEnumerable<Object[]>() {
             @Override
             public Enumerator<Object[]> enumerator() {
                 return new RedisEnumerator<>(new RedisEnumerator.ArrayRowConverter(fieldTypes, fields),
-                    DataBridge.getInstance().getTableData(tableName));
+                        DataBridge.getInstance().getTableData(table.tableName));
             }
         };
     }
